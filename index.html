@@ -21,7 +21,7 @@ html_content = '''
     </style>
 </head>
 <body>
-    <h1>☕ 本週拉花 PK 賽 (11位夥伴)</h1>
+    <h1>☕ 向心本週拉花 PK 賽 (11位夥伴)</h1>
     <p>點擊按鈕為你支持的拉花投票！</p>
 
     <div class="grid" id="main-grid"></div>
@@ -70,14 +70,30 @@ html_content = '''
             alert("投票成功！");
         }
 
-        // 5. 歸零動作
-        function resetVotes() {
-            if(confirm("確定要清除所有票數嗎？")) {
-                votes = {};
-                localStorage.removeItem('latte_votes');
-                render();
-            }
+        // // 5. 歸零動作（新增密碼保護）
+function resetVotes() {
+    // 這裡設定你的管理員密碼，例如 "starbucks123" 或 "coffee888"
+    const adminPassword = "20030323"; 
+
+    // 彈出輸入框讓使用者輸入密碼
+    const userInput = prompt("請輸入管理員密碼以清空票數：");
+
+    if (userInput === adminPassword) {
+        // 如果密碼正確，再詢問一次確認
+        if (confirm("密碼正確！確定要將本週所有票數歸零嗎？")) {
+            votes = {};
+            localStorage.removeItem('latte_votes');
+            render();
+            alert("票數已成功歸零，新的一週開始！");
         }
+    } else if (userInput === null) {
+        // 如果使用者點擊「取消」，不做任何事
+        return;
+    } else {
+        // 如果密碼錯誤
+        alert("密碼錯誤！你沒有權限重設票數。");
+    }
+}
 
         render();
     </script>
