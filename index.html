@@ -1,37 +1,32 @@
 from IPython.display import HTML
 
-html_content = '''
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☕ Barista 拉花大賽</title>
-    <style>
-        /* 這裡幫你處理好美化了 */
-        body { font-family: sans-serif; background-color: #f4f1ea; text-align: center; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; }
-        .card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .latte-img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
-        .name { font-size: 1.2rem; font-weight: bold; margin: 10px 0; color: #6f4e37; }
-        .vote-btn { background: #6f4e37; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
-        .vote-btn:hover { background: #e67e22; }
-        .count { font-size: 1.5rem; color: #e67e22; font-weight: bold; }
-        .reset-btn { background: #ccc; border: none; padding: 5px 10px; margin-top: 50px; cursor: pointer; font-size: 12px; }
-    </style>
-</head>
-<body>
-    <h1>☕ 向心本週拉花 PK 賽 (10位夥伴)</h1>
-    <p>點擊按鈕為你支持的拉花投票！</p>
+    <title>☕ 向心門市 Barista 拉花大賽</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjpsK4vZPeLuIHnaWq9yZyEfkM2yb2iOM",
+            authDomain: "shuuu-87761.firebaseapp.com",
+            
+            databaseURL: "https://shuuu-87761-default-rtdb.asia-southeast1.firebasedatabase.app", 
+            projectId: "shuuu-87761",
+            storageBucket: "shuuu-87761.firebasestorage.app",
+            messagingSenderId: "445720361109",
+            appId: "1:445720361109:web:d20e41886276afe272c39c",
+            measurementId: "G-JMG4Z11KHF"
+        };
 
-    <div class="grid" id="main-grid"></div>
+        // 初始化 Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const votesRef = ref(db, 'votes');
 
-    <button class="reset-btn" onclick="resetVotes()">管理員：新的一週票數歸零</button>
-
-    <script>
-        // 1. 這裡填入 11 個夥伴的照片和名字 (你每週只需改這裡的連結)
-        // 若要更換圖片，請將 `img` 後的網址替換為您的圖片連結。
-        // 例如： { id: 1, name: "你的夥伴名字", img: "https://your-image-hosting.com/your-image.jpg" },
+        // --- 夥伴資料 (如有變動再改這裡) ---
         const partners = [
             { id: 1, name: "Sharon", img: "https://cdn.phototourl.com/free/2026-03-31-4c843b34-fb56-4085-a97f-1d8db99c63ad.jpg" },
             { id: 2, name: "Heather", img: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?w=400" },
@@ -43,61 +38,85 @@ html_content = '''
             { id: 8, name: "IRENE", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" },
             { id: 9, name: "ROXANNE", img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400" },
             { id: 10, name: "LIVIA", img: "https://images.unsplash.com/photo-1506372023823-741c83b836fe?w=400" },
-
         ];
 
-        // 2. 讀取票數
-        let votes = JSON.parse(localStorage.getItem('latte_votes')) || {};
+        let votes = {};
+        const VOTE_LIMIT = 3;
+        let myVotes = parseInt(localStorage.getItem('shulatte_votes')) || 0;
 
-        // 3. 畫出 10張卡片
+        // 監聽雲端即時票數 (每當有人投票，畫面會自動跳動)
+        onValue(votesRef, (snapshot) => {
+            votes = snapshot.val() || {};
+            render();
+        });
+
         function render() {
             const grid = document.getElementById('main-grid');
-            grid.innerHTML = partners.map(p => `
-                <div class="card">
-                    <img src="${p.img}" class="latte-img">
-                    <div class="name">${p.name}</div>
-                    <div class="count">${votes[p.id] || 0} 票</div>
-                    <button class="vote-btn" onclick="vote(${p.id})">投給他</button>
-                </div>
-            `).join('');
+            const status = document.getElementById('user-status');
+            const remaining = VOTE_LIMIT - myVotes;
+            status.innerText = remaining > 0 ? `您本週還有 ${remaining} 票可以投！` : "您本週的 3 票已投完，感謝支持！";
+
+            grid.innerHTML = partners.map(p => {
+                const isMaxed = myVotes >= VOTE_LIMIT;
+                return `
+                    <div class="card">
+                        <img src="${p.img}" class="latte-img">
+                        <div class="name">${p.name}</div>
+                        <div class="count">${votes[p.id] || 0} 票</div>
+                        <button class="vote-btn" ${isMaxed ? 'disabled' : ''} onclick="window.vote(${p.id})">
+                            ${isMaxed ? '票數已滿' : '投給這杯拉花'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
         }
 
-        // 4. 投票動作
-        function vote(id) {
-            votes[id] = (votes[id] || 0) + 1;
-            localStorage.setItem('latte_votes', JSON.stringify(votes));
-            render();
-            alert("投票成功！");
-        }
+        // 投票動作
+        window.vote = (id) => {
+            if (myVotes < VOTE_LIMIT) {
+                const currentVote = (votes[id] || 0) + 1;
+                set(ref(db, 'votes/' + id), currentVote);
+                myVotes++;
+                localStorage.setItem('shulatte_votes', myVotes);
+            }
+        };
 
-        // // 5. 歸零動作（新增密碼保護）
-function resetVotes() {
-    // 這裡設定你的管理員密碼，例如 "starbucks123" 或 "coffee888"
-    const adminPassword = "20030323"; 
-
-    // 彈出輸入框讓使用者輸入密碼
-    const userInput = prompt("請輸入管理員密碼以清空票數：");
-
-    if (userInput === adminPassword) {
-        // 如果密碼正確，再詢問一次確認
-        if (confirm("密碼正確！確定要將本週所有票數歸零嗎？")) {
-            votes = {};
-            localStorage.removeItem('latte_votes');
-            render();
-            alert("票數已成功歸零，新的一週開始！");
-        }
-    } else if (userInput === null) {
-        // 如果使用者點擊「取消」，不做任何事
-        return;
-    } else {
-        // 如果密碼錯誤
-        alert("密碼錯誤！你沒有權限重設票數。");
-    }
-}
-
-        render();
+        // 管理員歸零功能
+        window.resetVotes = () => {
+            const adminPassword = "20030323"; 
+            if (prompt("管理員密碼：") === adminPassword) {
+                if (confirm("確定要將全體票數歸零嗎？這會同步清除資料庫與您的投票紀錄。")) {
+                    remove(votesRef)
+                        .then(() => {
+                            localStorage.removeItem('shulatte_votes');
+                            alert("已全數歸零！祝下週比賽順利 ☕");
+                            location.reload();
+                        })
+                        .catch(err => alert("歸零失敗：" + err));
+                }
+            } else {
+                alert("密碼錯誤！");
+            }
+        };
     </script>
+
+    <style>
+        body { font-family: sans-serif; background-color: #f4f1ea; text-align: center; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; }
+        .card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .latte-img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
+        .name { font-size: 1.2rem; font-weight: bold; margin: 10px 0; color: #6f4e37; }
+        .vote-btn { background: #6f4e37; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+        .vote-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .count { font-size: 1.5rem; color: #e67e22; font-weight: bold; margin-bottom: 5px; }
+        .reset-btn { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 8px 15px; margin-top: 50px; cursor: pointer; font-size: 12px; border-radius: 5px; }
+        #user-status { font-weight: bold; color: #6f4e37; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>☕ 向心門市本週拉花 PK 賽</h1>
+    <div id="user-status">載入中...</div>
+    <div class="grid" id="main-grid"></div>
+    <button class="reset-btn" onclick="window.resetVotes()">⚙️ 管理員歸零 (新的一週開始)</button>
 </body>
 </html>
-'''
-display(HTML(html_content))
