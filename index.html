@@ -1,5 +1,3 @@
-from IPython.display import HTML
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -7,12 +5,13 @@ from IPython.display import HTML
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>☕ 向心門市 Barista 拉花大賽</title>
     <script type="module">
+        // 修正處：這裡的網址必須完整，並且以 "; 結尾
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyBjpsK4vZPeLuIHnaWq9yZyEfkM2yb2iOM",
             authDomain: "shuuu-87761.firebaseapp.com",
-            
             databaseURL: "https://shuuu-87761-default-rtdb.asia-southeast1.firebasedatabase.app", 
             projectId: "shuuu-87761",
             storageBucket: "shuuu-87761.firebasestorage.app",
@@ -26,7 +25,7 @@ from IPython.display import HTML
         const db = getDatabase(app);
         const votesRef = ref(db, 'votes');
 
-        // --- 夥伴資料 (如有變動再改這裡) ---
+        // --- 夥伴資料 ---
         const partners = [
             { id: 1, name: "Sharon", img: "https://cdn.phototourl.com/free/2026-03-31-4c843b34-fb56-4085-a97f-1d8db99c63ad.jpg" },
             { id: 2, name: "Heather", img: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?w=400" },
@@ -44,7 +43,6 @@ from IPython.display import HTML
         const VOTE_LIMIT = 3;
         let myVotes = parseInt(localStorage.getItem('shulatte_votes')) || 0;
 
-        // 監聽雲端即時票數 (每當有人投票，畫面會自動跳動)
         onValue(votesRef, (snapshot) => {
             votes = snapshot.val() || {};
             render();
@@ -71,21 +69,20 @@ from IPython.display import HTML
             }).join('');
         }
 
-        // 投票動作
         window.vote = (id) => {
             if (myVotes < VOTE_LIMIT) {
                 const currentVote = (votes[id] || 0) + 1;
                 set(ref(db, 'votes/' + id), currentVote);
                 myVotes++;
                 localStorage.setItem('shulatte_votes', myVotes);
+                render(); // 手動觸發一次畫面更新
             }
         };
 
-        // 管理員歸零功能
         window.resetVotes = () => {
             const adminPassword = "20030323"; 
             if (prompt("管理員密碼：") === adminPassword) {
-                if (confirm("確定要將全體票數歸零嗎？這會同步清除資料庫與您的投票紀錄。")) {
+                if (confirm("確定要將全體票數歸零嗎？")) {
                     remove(votesRef)
                         .then(() => {
                             localStorage.removeItem('shulatte_votes');
