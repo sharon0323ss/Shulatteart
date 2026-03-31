@@ -21,7 +21,7 @@ html_content = '''
     </style>
 </head>
 <body>
-    <h1>☕ 向心本週拉花 PK 賽 (11位夥伴)</h1>
+    <h1>☕ 向心本週拉花 PK 賽 (10位夥伴)</h1>
     <p>點擊按鈕為你支持的拉花投票！</p>
 
     <div class="grid" id="main-grid"></div>
@@ -49,7 +49,7 @@ html_content = '''
         // 2. 讀取票數
         let votes = JSON.parse(localStorage.getItem('latte_votes')) || {};
 
-        // 3. 畫出 11 張卡片
+        // 3. 畫出 10張卡片
         function render() {
             const grid = document.getElementById('main-grid');
             grid.innerHTML = partners.map(p => `
