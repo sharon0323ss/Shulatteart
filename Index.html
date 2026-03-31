@@ -1,87 +1,21 @@
-from IPython.display import HTML
-
-html_content = '''
+<!-- HTML Content with Password Protection added -->
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☕ Barista 拉花大賽</title>
-    <style>
-        /* 這裡幫你處理好美化了 */
-        body { font-family: sans-serif; background-color: #f4f1ea; text-align: center; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1200px; margin: 30px auto; }
-        .card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .latte-img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
-        .name { font-size: 1.2rem; font-weight: bold; margin: 10px 0; color: #6f4e37; }
-        .vote-btn { background: #6f4e37; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
-        .vote-btn:hover { background: #e67e22; }
-        .count { font-size: 1.5rem; color: #e67e22; font-weight: bold; }
-        .reset-btn { background: #ccc; border: none; padding: 5px 10px; margin-top: 50px; cursor: pointer; font-size: 12px; }
-    </style>
+    <title>Shulatteart</title>
+    <script>
+        function checkPassword() {
+            var password = prompt('Enter password for admin reset:');
+            if (password !== 'your_password') {
+                alert('Incorrect password!');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
-    <h1>☕ 本週拉花 PK 賽 (11位夥伴)</h1>
-    <p>點擊按鈕為你支持的拉花投票！</p>
-
-    <div class="grid" id="main-grid"></div>
-
-    <button class="reset-btn" onclick="resetVotes()">管理員：新的一週票數歸零</button>
-
-    <script>
-        // 1. 這裡填入 11 個夥伴的照片和名字 (你每週只需改這裡的連結)
-        // 若要更換圖片，請將 `img` 後的網址替換為您的圖片連結。
-        // 例如： { id: 1, name: "你的夥伴名字", img: "https://your-image-hosting.com/your-image.jpg" },
-        const partners = [
-            { id: 1, name: "Sharon", img: "https://cdn.phototourl.com/free/2026-03-31-4c843b34-fb56-4085-a97f-1d8db99c63ad.jpg" },
-            { id: 2, name: "Heather", img: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?w=400" },
-            { id: 3, name: "JOY", img: "https://images.unsplash.com/photo-1510707547241-0062776c5b9d?w=400" },
-            { id: 4, name: "BIBI", img: "https://images.unsplash.com/photo-1595434091143-b375ace5d541?w=400" },
-            { id: 5, name: "BREEZE", img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400" },
-            { id: 6, name: "RYAN", img: "https://images.unsplash.com/photo-1599392862913-17686869677e?w=400" },
-            { id: 7, name: "ALLEN", img: "https://images.unsplash.com/photo-1522992319-0365e5f11656?w=400" },
-            { id: 8, name: "IRENE", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" },
-            { id: 9, name: "ROXANNE", img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400" },
-            { id: 10, name: "LIVIA", img: "https://images.unsplash.com/photo-1506372023823-741c83b836fe?w=400" },
-
-        ];
-
-        // 2. 讀取票數
-        let votes = JSON.parse(localStorage.getItem('latte_votes')) || {};
-
-        // 3. 畫出 11 張卡片
-        function render() {
-            const grid = document.getElementById('main-grid');
-            grid.innerHTML = partners.map(p => `
-                <div class="card">
-                    <img src="${p.img}" class="latte-img">
-                    <div class="name">${p.name}</div>
-                    <div class="count">${votes[p.id] || 0} 票</div>
-                    <button class="vote-btn" onclick="vote(${p.id})">投給他</button>
-                </div>
-            `).join('');
-        }
-
-        // 4. 投票動作
-        function vote(id) {
-            votes[id] = (votes[id] || 0) + 1;
-            localStorage.setItem('latte_votes', JSON.stringify(votes));
-            render();
-            alert("投票成功！");
-        }
-
-        // 5. 歸零動作
-        function resetVotes() {
-            if(confirm("確定要清除所有票數嗎？")) {
-                votes = {};
-                localStorage.removeItem('latte_votes');
-                render();
-            }
-        }
-
-        render();
-    </script>
+    <h1>Welcome to Shulatteart</h1>
+    <button onclick="if(checkPassword()){ /* Admin reset logic */ }">Reset Admin</button>
 </body>
 </html>
-'''
-display(HTML(html_content))
