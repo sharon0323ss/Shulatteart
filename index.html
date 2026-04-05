@@ -76,28 +76,12 @@
             font-size: 12px; 
             border-radius: 5px; 
         }
-
-        /* 咖啡動圖裝飾 - 已根據你的樣式優化 */
-        .coffee-gif-left {
-            position: fixed; bottom: 15px; left: 15px; width: 80px;
-            z-index: 1000; opacity: 0.9; pointer-events: none;
-        }
-
-        .coffee-gif-right {
-            position: fixed; bottom: 15px; right: 15px; width: 70px;
-            z-index: 1000; transform: rotate(10deg); pointer-events: none;
-        }
-
-        @media (max-width: 600px) {
-            .coffee-gif-left, .coffee-gif-right { width: 50px; }
-        }
     </style>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Firebase 配置保持不變
         const firebaseConfig = {
             apiKey: "AIzaSyBjpsK4vZPeLuIHnaWq9yZyEfkM2yb2iOM",
             authDomain: "shuuu-87761.firebaseapp.com",
@@ -189,8 +173,5 @@
     <div id="user-status">載入中...</div>
     <div class="grid" id="main-grid"></div>
     <button class="reset-btn" onclick="window.resetVotes()">⚙️ 管理員歸零 (新的一週開始)</button>
-
-    <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHYybm9pNm5oZ3R3eDhkZ3R3eDhkZ3R3eDhkZ3R3eDhkZ3R3eCZlcD12MV9pbnRlcm5hbV9naWZfYnlfaWQmY3Q9cw/l0HlIDueXKHuLTuMg/giphy.gif" class="coffee-gif-left">
-    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3R3eDhkZ3R3eDhkZ3R3eDhkZ3R3eDhkZ3R3eDhkZ3R3eCZlcD12MV9pbnRlcm5hbV9naWZfYnlfaWQmY3Q9cw/3o7TKMGpxx6r7Y0Kqc/giphy.gif" class="coffee-gif-right">
 </body>
 </html>
