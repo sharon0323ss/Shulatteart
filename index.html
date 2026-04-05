@@ -76,6 +76,32 @@
             font-size: 12px; 
             border-radius: 5px; 
         }
+
+        /* 質感裝飾圖樣式 */
+        .coffee-gif-left {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 100px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .coffee-gif-right {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 600px) {
+            .coffee-gif-left { width: 60px; bottom: 10px; left: 10px; }
+            .coffee-gif-right { width: 50px; bottom: 10px; right: 10px; }
+        }
     </style>
 
     <script type="module">
@@ -114,8 +140,16 @@
         const VOTE_LIMIT = 3;
         let myVotes = parseInt(localStorage.getItem('shulatte_votes')) || 0;
 
+        // 即時監控數據
         onValue(votesRef, (snapshot) => {
             votes = snapshot.val() || {};
+
+            // ✨ 核心修正：如果雲端資料庫被歸零(null)，自動重置使用者的投票數
+            if (Object.keys(votes).length === 0) {
+                myVotes = 0;
+                localStorage.removeItem('shulatte_votes');
+            }
+            
             render();
         });
 
@@ -153,7 +187,7 @@
         window.resetVotes = () => {
             const adminPassword = "20030323"; 
             if (prompt("管理員密碼：") === adminPassword) {
-                if (confirm("確定要將全體票數歸零嗎？")) {
+                if (confirm("確定要將全體票數歸零嗎？這會同步重置所有人的手機票數。")) {
                     remove(votesRef)
                         .then(() => {
                             localStorage.removeItem('shulatte_votes');
@@ -172,6 +206,10 @@
     <h1>☕ 向心門市本週拉花 PK 賽</h1>
     <div id="user-status">載入中...</div>
     <div class="grid" id="main-grid"></div>
+
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N5bm9pYmN4eDhyZ3R5eWp3Z3R5eXpueXJ3eXpueXJ3eXpueXJ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKVUn7iM8FMEU24/giphy.gif" class="coffee-gif-left">
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N5bm9pYmN4eDhyZ3R5eWp3Z3R5eXpueXJ3eXpueXJ3eXpueXJ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/l0HlIDZIn7mCsh98k/giphy.gif" class="coffee-gif-right">
+
     <button class="reset-btn" onclick="window.resetVotes()">⚙️ 管理員歸零 (新的一週開始)</button>
 </body>
 </html>
