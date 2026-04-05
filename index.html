@@ -29,13 +29,13 @@
         const partners = [
             { id: 1, name: "Sharon", img: "https://cdn.phototourl.com/free/2026-03-31-4c843b34-fb56-4085-a97f-1d8db99c63ad.jpg" },
             { id: 2, name: "Heather", img: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?w=400" },
-            { id: 3, name: "JOY", img: "https://images.unsplash.com/photo-1510707547241-0062776c5b9d?w=400" },
-            { id: 4, name: "BIBI", img: "https://images.unsplash.com/photo-1595434091143-b375ace5d541?w=400" },
+            { id: 3, name: "JOY", img: "https://cdn.phototourl.com/free/2026-04-05-b178daff-d413-4787-98bd-8a3a6f9bb7db.jpg" },
+            { id: 4, name: "BIBI", img: "https://cdn.phototourl.com/free/2026-04-05-5813455f-864f-4ab5-8528-362f1e201329.jpg" },
             { id: 5, name: "BREEZE", img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400" },
-            { id: 6, name: "RYAN", img: "https://images.unsplash.com/photo-1599392862913-17686869677e?w=400" },
-            { id: 7, name: "ALLEN", img: "https://images.unsplash.com/photo-1522992319-0365e5f11656?w=400" },
+            { id: 6, name: "RYAN", img: "https://cdn.phototourl.com/free/2026-04-05-515207e2-10cc-4af7-8ed8-89c4d0577dc2.jpg" },
+            { id: 7, name: "ALLEN", img: "https://cdn.phototourl.com/free/2026-04-05-bcdcce6f-dfe9-4d62-a3de-d7fd8a2c0615.jpg" },
             { id: 8, name: "IRENE", img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400" },
-            { id: 9, name: "ROXANNE", img: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400" },
+            { id: 9, name: "ROXANNE", img: "https://cdn.phototourl.com/free/2026-04-05-f48751a5-fc2a-4ca1-a1f7-5f0aa96a504a.jpg" },
             { id: 10, name: "LIVIA", img: "https://images.unsplash.com/photo-1506372023823-741c83b836fe?w=400" },
         ];
 
@@ -96,6 +96,65 @@
             }
         };
     </script>
+<div class="coffee-deco">
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueXJ3eXpueXJ3eXpueXJ3eXpueXJ3eXpueXJ3eXpueXJ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/l3vR6assXOnG6G3C0/giphy.gif" class="coffee-gif-left">
+    
+    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueXJ3eXpueXJ3eXpueXJ3eXpueXJ3eXpueXJ3eXpueXJ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKVUn7iM8FMEU24/giphy.gif" class="coffee-gif-right">
+</div>
+
+<style>
+    /* 調整背景色為咖啡奶油色 */
+    body {
+        background-color: #faf7f2;
+        color: #4b3621;
+    }
+
+    /* 標題改為深縮合色 (Espresso 色) */
+    h1 {
+        color: #3d2b1f;
+        font-family: "Georgia", serif;
+        border-bottom: 2px dashed #d7ccc8;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+    .coffee-gif-left {
+        position: fixed;
+        bottom: 15px;
+        left: 15px;
+        width: 90px;
+        z-index: 1000;
+        opacity: 0.9;
+    }
+
+    .coffee-gif-right {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        width: 80px;
+        z-index: 1000;
+        transform: rotate(10deg);
+    }
+
+    /* 讓卡片看起來像牛皮紙菜單 */
+    .card {
+        border: 1px solid #e0d7d1;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
+    }
+
+    /* 投票按鈕改為經典的星巴克綠或深拿鐵色 */
+    .vote-btn {
+        background: #1e3932; /* 星巴克經典綠 */
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .vote-btn:hover {
+        background: #00704a;
+    }
+</style>
 
     <style>
         body { font-family: sans-serif; background-color: #f4f1ea; text-align: center; padding: 20px; }
