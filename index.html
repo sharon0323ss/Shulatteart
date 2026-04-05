@@ -6,14 +6,14 @@
     <title>☕ 向心門市 Barista 拉花大賽</title>
     
     <style>
-        /* 基礎樣式：採用溫暖的咖啡奶油色調 */
         body { 
-            font-family: "Georgia", "PingFang TC", sans-serif; 
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; 
             background-color: #faf7f2; 
             color: #4b3621;
             text-align: center; 
             padding: 20px; 
             margin: 0;
+            overflow-x: hidden;
         }
 
         h1 {
@@ -26,7 +26,6 @@
 
         #user-status { font-weight: bold; color: #6f4e37; margin-bottom: 20px; }
 
-        /* 卡片設計：牛皮紙質感與抽卡浮動效果 */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
@@ -42,6 +41,8 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
             border: 1px solid #e0d7d1;
             transition: transform 0.3s;
+            position: relative;
+            z-index: 2;
         }
 
         .card:hover { transform: translateY(-5px); }
@@ -50,7 +51,6 @@
         .name { font-size: 1.2rem; font-weight: bold; margin: 10px 0; color: #6f4e37; }
         .count { font-size: 1.8rem; color: #e67e22; font-weight: bold; margin-bottom: 5px; }
 
-        /* 按鈕設計：星巴克經典綠 */
         .vote-btn { 
             background: #1e3932; 
             color: white; 
@@ -77,30 +77,26 @@
             border-radius: 5px; 
         }
 
-        /* 質感裝飾圖樣式 */
-        .coffee-gif-left {
+        /* ✨ 漂浮裝飾邏輯：使用 Emoji，保證 100% 跑得出來 */
+        .deco {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 100px;
-            z-index: 1000;
+            font-size: 50px;
+            z-index: 1;
+            opacity: 0.6;
+            animation: float 4s ease-in-out infinite;
             pointer-events: none;
-            opacity: 0.8;
         }
 
-        .coffee-gif-right {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 80px;
-            z-index: 1000;
-            pointer-events: none;
-            opacity: 0.8;
+        .deco-left { bottom: 30px; left: 20px; }
+        .deco-right { bottom: 30px; right: 20px; animation-delay: 2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
         }
 
         @media (max-width: 600px) {
-            .coffee-gif-left { width: 60px; bottom: 10px; left: 10px; }
-            .coffee-gif-right { width: 50px; bottom: 10px; right: 10px; }
+            .deco { font-size: 35px; }
         }
     </style>
 
@@ -140,16 +136,13 @@
         const VOTE_LIMIT = 3;
         let myVotes = parseInt(localStorage.getItem('shulatte_votes')) || 0;
 
-        // 即時監控數據
         onValue(votesRef, (snapshot) => {
             votes = snapshot.val() || {};
-
-            // ✨ 核心修正：如果雲端資料庫被歸零(null)，自動重置使用者的投票數
+            // ✨ 歸零連動邏輯
             if (Object.keys(votes).length === 0) {
                 myVotes = 0;
                 localStorage.removeItem('shulatte_votes');
             }
-            
             render();
         });
 
@@ -187,7 +180,7 @@
         window.resetVotes = () => {
             const adminPassword = "20030323"; 
             if (prompt("管理員密碼：") === adminPassword) {
-                if (confirm("確定要將全體票數歸零嗎？這會同步重置所有人的手機票數。")) {
+                if (confirm("確定要將全體票數歸零嗎？")) {
                     remove(votesRef)
                         .then(() => {
                             localStorage.removeItem('shulatte_votes');
@@ -205,10 +198,11 @@
 <body>
     <h1>☕ 向心門市本週拉花 PK 賽</h1>
     <div id="user-status">載入中...</div>
+    
     <div class="grid" id="main-grid"></div>
 
-    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N5bm9pYmN4eDhyZ3R5eWp3Z3R5eXpueXJ3eXpueXJ3eXpueXJ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKVUn7iM8FMEU24/giphy.gif" class="coffee-gif-left">
-    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3N5bm9pYmN4eDhyZ3R5eWp3Z3R5eXpueXJ3eXpueXJ3eXpueXJ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/l0HlIDZIn7mCsh98k/giphy.gif" class="coffee-gif-right">
+    <div class="deco deco-left">☕</div>
+    <div class="deco deco-right">🫘</div>
 
     <button class="reset-btn" onclick="window.resetVotes()">⚙️ 管理員歸零 (新的一週開始)</button>
 </body>
