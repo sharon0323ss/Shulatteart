@@ -77,7 +77,6 @@
             border-radius: 5px; 
         }
 
-        /* ✨ 漂浮裝飾邏輯：使用 Emoji，保證 100% 跑得出來 */
         .deco {
             position: fixed;
             font-size: 50px;
@@ -124,11 +123,11 @@
             { id: 2, name: "Heather", img: "https://cdn.phototourl.com/free/2026-04-13-01b2d63a-ae89-43a5-83d4-e3358cf342da.jpg" },
             { id: 3, name: "JOY", img: "https://cdn.phototourl.com/free/2026-04-13-87a0436c-d1bc-40cf-b901-ba81ad8a9dbb.jpg" },
             { id: 4, name: "BIBI", img: "https://cdn.phototourl.com/free/2026-04-13-30eb2dff-d430-4cd5-a2aa-f5eb743012c7.jpg" },
-            { id: 5, name: "BREEZE", img:"https://cdn.phototourl.com/free/2026-04-13-56ef53ad-8339-4d13-9e80-df6e74f5ab23.jpg" },
+            { id: 5, name: "BREEZE", img: "https://cdn.phototourl.com/free/2026-04-13-56ef53ad-8339-4d13-9e80-df6e74f5ab23.jpg" },
             { id: 6, name: "RYAN", img: "https://cdn.phototourl.com/free/2026-04-13-29daffbc-e435-4867-af09-764450c9cbde.jpg" },
             { id: 7, name: "ALLEN", img: "https://cdn.phototourl.com/free/2026-04-13-658b766c-ad6f-404f-87c6-471aabedae15.jpg" },
-            { id: 8, name: "IRENE", img:"https://cdn.phototourl.com/free/2026-04-13-c20aca87-c2f8-42b7-9a7e-9bd40e09042d.jpg" },
-            { id: 9, name: "ROXANNE", img:"https://cdn.phototourl.com/free/2026-04-13-184a336b-2d0e-48f4-819d-971dc5c4117d.jpg" },
+            { id: 8, name: "IRENE", img: "https://cdn.phototourl.com/free/2026-04-13-c20aca87-c2f8-42b7-9a7e-9bd40e09042d.jpg" },
+            { id: 9, name: "ROXANNE", img: "https://cdn.phototourl.com/free/2026-04-13-184a336b-2d0e-48f4-819d-971dc5c4117d.jpg" },
             { id: 10, name: "LIVIA", img: "https://cdn.phototourl.com/free/2026-04-05-69ea8429-e33b-472c-9cd6-1c06f6c35fd8.jpg" },
         ];
 
@@ -138,7 +137,7 @@
 
         onValue(votesRef, (snapshot) => {
             votes = snapshot.val() || {};
-            // ✨ 歸零連動邏輯
+            // ✨ 歸零同步檢查：如果資料庫歸零，同步重置本地紀錄
             if (Object.keys(votes).length === 0) {
                 myVotes = 0;
                 localStorage.removeItem('shulatte_votes');
